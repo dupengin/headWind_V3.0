@@ -1,5 +1,10 @@
 
 from gpxExtract_Process import speedCalc
+from windSpeed import windSpeed
 
 gpxFile = ('testData/east_25kmh.gpx')
-speedCalc(gpxFile)
+all_data = speedCalc(gpxFile)
+
+test_mode = True
+test_wind_file ('testData/')
+windSpeed(all_data,test_mode, test_wind_file)
