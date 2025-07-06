@@ -7,12 +7,13 @@ Methodology
 - Use the difference between i and i + 1 to calculate bearing and speed
 - Save bearing and speed in a dictionary 
 - the time and date of the gpx points needs to be retained to allign with the wind speed data
+- it is assumed that rate of change in altitude is so small between points that it does not effect distance
 Units 
 - Speed kmh
 - distance km
 
 The ArcGIS Python library will be used
-As coords are in deg, this will need to be converted to KM to give the correct speed
+GeoPy to be used instead of ArcPy
 
 Unit testing 
 - Sample gpx files will be generated to test the data
@@ -28,9 +29,13 @@ Dictionary containing speed, bearing, time and date of the gpx points
 
 """
 
+import geopy.distance
+
+
 def speedCalc(gpxFile):
     import gpxpy # for gpx parse
-    import arcpy # for distance calcs
+    import geopy # for distance calcs
+    from datetime import datetime
 
     gpx_file = open(gpxFile, 'r') # open the gpx file in  read mode
     gpx_file_parse = gpxpy.parse(gpx_file)
@@ -49,20 +54,25 @@ def speedCalc(gpxFile):
                 gpx_data.append({'time':time, 'date':date, 'longit':longit, 'lat':lat})
     
     #distance calcs
-    
-# Define spatial reference
-    sr_wgs84 = arcpy.SpatialReference(4326)  #WGS84 Degrees
-    sr_web_merc = arcpy.SpatialReference(3857)   #Web Mercator to convert to meters
-
+    speed = []
     for i in range(len(gpx_data) - 1):
-        point1 = arcpy.PointGeometry(arcpy.Point(gpx_data[i+1]['longit'], gpx_data[i+1]['lat']), sr_wgs84)
-        point2 = arcpy.PointGeometry(arcpy.Point(gpx_data[i+1]['longit'], gpx_data[i+1]['lat']), sr_wgs84)
+        point1 = (gpx_data[i]['lat'], gpx_data[i]['longit'])
+        point2 = (gpx_data[i+1]['lat'], gpx_data[i+1]['longit'])
         
-        point1_km = (point1.projectAs(sr_web_merc))/1000 #convert deg to km
-        point2_km = (point2.projectAs(sr_web_merc))/1000 #convert deg to km
+        dist = ( geopy.distance.distance(point1,point2).km) 
 
+        
+        fmt = "%H:%M:%S"
+        t1 = datetime.strptime(gpx_data[i]['time'], fmt)
+        t2 = datetime.strptime(gpx_data[i+1]['time'], fmt)
 
-gpxFile = ('testData/north_1kmh.gpx')
+        # Calculate the time difference
+        time_diff = t2 - t1
+        time_diff_hrs = time_diff.total_seconds()/3600 
+
+        speed.append(dist/time_diff_hrs) 
+
+gpxFile = ('testData/Cycling.gpx')
 
 
 speedCalc(gpxFile)
