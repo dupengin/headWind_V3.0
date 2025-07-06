@@ -29,7 +29,7 @@ Dictionary containing speed, bearing, time and date of the gpx points
 
 """
 
-import geopy.distance
+
 
 
 def speedCalc(gpxFile):
@@ -54,7 +54,7 @@ def speedCalc(gpxFile):
                 gpx_data.append({'time':time, 'date':date, 'longit':longit, 'lat':lat})
     
     #distance calcs
-    speed = []
+    speed_data = []
     for i in range(len(gpx_data) - 1):
         point1 = (gpx_data[i]['lat'], gpx_data[i]['longit'])
         point2 = (gpx_data[i+1]['lat'], gpx_data[i+1]['longit'])
@@ -70,10 +70,28 @@ def speedCalc(gpxFile):
         time_diff = t2 - t1
         time_diff_hrs = time_diff.total_seconds()/3600 
 
-        speed.append(dist/time_diff_hrs) 
+        speed_data.append(dist/time_diff_hrs) 
      
      
-    bearing(gpx_data)
+    bearing_data = bearing(gpx_data)
+
+    #create a array of dicts for passing the data back to other modules
+    
+    gpxSpeedBearing_data =[]
+    for i in range (len(bearing_data)):
+        time = gpx_data[i]['time']
+        date = gpx_data[i]['date']
+        lon = gpx_data[i]['longit']
+        lat = gpx_data[i]['lat']
+        speed = speed_data[i]
+        bearings = bearing_data[i]
+
+        gpxSpeedBearing_data.append({'time':time, 'date':date, 'longit':lon, 'lat':lat, 'speed':speed, 'bearing': bearings})
+    
+    return gpxSpeedBearing_data
+
+
+    print(len(bearing_data),len(speed),len(gpx_data))
 
     #return gpxSpeedBearing_data
 
@@ -116,7 +134,9 @@ def bearing(gpx_data) :
         initial_bearing = math.degrees(initial_bearing)
         compass_bearing = (initial_bearing + 360) % 360
 
-        bearings.append(compass_bearing)  
+        bearings.append(compass_bearing)
+
+    return bearings  
 
 
 gpxFile = ('testData/east_25kmh.gpx')
