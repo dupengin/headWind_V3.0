@@ -71,8 +71,56 @@ def speedCalc(gpxFile):
         time_diff_hrs = time_diff.total_seconds()/3600 
 
         speed.append(dist/time_diff_hrs) 
+     
+     
+    bearing(gpx_data)
 
-gpxFile = ('testData/Cycling.gpx')
+    #return gpxSpeedBearing_data
+
+def bearing(gpx_data) :
+    """
+    credit : https://gist.github.com/jeromer/2005586 - formula taken from here
+
+    Calculates the bearing between two points.
+    The formulae used is the following:
+        θ = atan2(sin(Δlong).cos(lat2),
+                  cos(lat1).sin(lat2) − sin(lat1).cos(lat2).cos(Δlong))
+    :Parameters:
+      - `Latitude and longitude must be in decimal degrees
+    :Returns:
+      The bearing in degrees
+    :Returns Type:
+      list
+    """
+
+    import math
+
+
+    bearings = []
+    for i in range(len(gpx_data)-1): 
+
+        lat1 = math.radians(gpx_data[i]['lat'])
+        lat2 = math.radians(gpx_data[i+1]['lat'])
+
+        diffLong = math.radians(gpx_data[i+1]['longit'] - gpx_data[i]['longit'])
+
+        x = math.sin(diffLong) * math.cos(lat2)
+        y = math.cos(lat1) * math.sin(lat2) - (math.sin(lat1)
+            * math.cos(lat2) * math.cos(diffLong))
+
+        initial_bearing = math.atan2(x, y)
+
+        # Now we have the initial bearing but math.atan2 return values
+        # from -180° to + 180° which is not what we want for a compass bearing
+        # The solution is to normalize the initial bearing as shown below
+        initial_bearing = math.degrees(initial_bearing)
+        compass_bearing = (initial_bearing + 360) % 360
+
+        bearings.append(compass_bearing)  
+
+
+gpxFile = ('testData/east_25kmh.gpx')
+
 
 
 speedCalc(gpxFile)
