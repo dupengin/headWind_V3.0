@@ -139,8 +139,8 @@ def bearing(gpx_data) :
     return bearings  
 
 
-gpxFile = ('testData/east_25kmh.gpx')
 
 
 
-speedCalc(gpxFile)
+
+
