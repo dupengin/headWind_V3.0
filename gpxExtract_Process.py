@@ -34,7 +34,7 @@ Dictionary containing speed, bearing, time and date of the gpx points
 
 def speedCalc(gpxFile):
     import gpxpy # for gpx parse
-    import geopy # for distance calcs
+    from geopy.distance import distance # for distance calcs
     from datetime import datetime
 
     gpx_file = open(gpxFile, 'r') # open the gpx file in  read mode
@@ -59,7 +59,7 @@ def speedCalc(gpxFile):
         point1 = (gpx_data[i]['lat'], gpx_data[i]['longit'])
         point2 = (gpx_data[i+1]['lat'], gpx_data[i+1]['longit'])
         
-        dist = ( geopy.distance.distance(point1,point2).km) 
+        dist = ( distance(point1,point2).km) 
 
         
         fmt = "%H:%M:%S"
