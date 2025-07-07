@@ -12,8 +12,8 @@ def windSpeed(gpx_data, test_mode, test_file):
     import csv
 
     api_key = os.getenv("API_KEY")
-    wind_speed = []
-    wind_bearing =[]
+    wind_csv = []
+    
 
 
     if test_mode : #use test data and don't make api call
@@ -24,9 +24,19 @@ def windSpeed(gpx_data, test_mode, test_file):
             reader = csv.reader(f)    
             next(reader)
             for row in reader:
-               wind_speed.append(row[1])
-               wind_bearing.append(row[0])
+               wind_bearing = row[0]
+               wind_speed = row[1]
+               
 
-    else : #make the API call for weather data
-        print('else')
-    
+        for i in range(len(gpx_data)):
+            gpx_data[i]["wind_speed"] = wind_speed
+            gpx_data[i]["wind_bearing"] = wind_bearing
+        
+        all_data = gpx_data
+            
+        
+
+    else: #make api call to get weather data
+        print('api call')
+
+    return all_data
