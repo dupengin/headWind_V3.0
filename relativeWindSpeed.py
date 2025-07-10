@@ -40,6 +40,6 @@ def relativeWindSpeed(data_in):
     
     return data_in
 
-test_data = [{'time' : 0, 'date' : 0 , 'longit': 0, 'lat' : 0, 'speed' : 25, 'bearing' : 0, 'wind_speed' : 1, 'wind_bearing' : 90 }]
+#test_data = [{'time' : 0, 'date' : 0 , 'longit': 0, 'lat' : 0, 'speed' : 25, 'bearing' : 0, 'wind_speed' : 1, 'wind_bearing' : 90 }]
         
-relativeWindSpeed(test_data)
+#relativeWindSpeed(test_data)
