@@ -14,7 +14,7 @@ from relativeWindSpeed import relativeWindSpeed
 import csv
 
 
-gpxFile = ('testData/Cycling.gpx')
+gpxFile = ('testData/GPX_2.gpx')
 all_data = speedCalc(gpxFile)
 
 test_mode = False
