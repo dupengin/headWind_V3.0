@@ -14,7 +14,7 @@ from relativeWindSpeed import relativeWindSpeed
 import csv
 
 
-gpxFile = ('testData/GPX_2.gpx')
+gpxFile = ('testData/GPX.gpx')
 all_data = speedCalc(gpxFile)
 
 test_mode = False
@@ -24,9 +24,9 @@ all_data = windSpeed(all_data,test_mode, test_wind_file)
 
 all_data = relativeWindSpeed(all_data)
 
+out_file_name = "data_out"
 
-
-with open("data_out", mode='w', newline='') as f:
+with open(out_file_name, mode='w', newline='') as f:
     writer = csv.DictWriter(f, fieldnames=all_data[0].keys())
     writer.writeheader()
     writer.writerows(all_data)
